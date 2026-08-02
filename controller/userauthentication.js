@@ -31,10 +31,40 @@ const register = (req,res)=>{
         // now everything is done we can create jwt token
         const token = await jwt.sign({emailid},process.env.JWT_SECRETE_KEY,{expiresIn:60*60});
         res.cookie('token',token,{maxAge:60*60*1000});
+        res.status(201).send("user sucessfully register")
 
     }
     catch(err){
-        res.send("error: " + err);
+        res.status(400).send("error: " + err);
     }
 
+}
+
+const login = (req,res)=>{
+    try{
+        const {emailid,password} = req.body;
+        if(!emailid){
+            throw new Error("invalid credentials")
+        }
+        if(!password){
+            throw new Error("invalid credentials")
+        }
+        const present = await User.findOne({emailid})
+        if(!present){
+            throw new Error("Invalid credentials");
+        }
+        const match = await bcrypt.compare(password,present.password);
+
+        if(!match){
+            throw new Error("invalid credentials")
+        }
+
+        const token = await jwt.sign({emailid},process.env.JWT_SECRETE_KEY,{expiresIn:60*60});
+        res.cookie('token',token,{maxAge:60*60*1000});
+        res.status(201).send("user sucessfully login")
+
+    }
+    catch(err){
+        res.send("error"+err);
+    }
 }
