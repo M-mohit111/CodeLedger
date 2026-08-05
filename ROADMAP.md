@@ -1,33 +1,40 @@
 # Backend Roadmap
 
-## Completed
+## ✅ Completed
 
-- [x] Express Setup
+- [x] Project Setup
+- [x] Express Server
+- [x] Environment Variables
 - [x] MongoDB Connection
 - [x] User Schema
 - [x] Validation Utility
-- [x] Password Hashing
-- [x] JWT Authentication (Basic)
+- [x] Password Hashing (bcrypt)
+- [x] JWT Authentication
+- [x] User Registration API
+- [x] User Login API
+- [x] Logout API
+- [x] Redis Integration
+- [x] User Middleware
+- [x] Admin Middleware
+- [x] Initial Problem Schema
+- [x] Problem Routes
 
 ---
 
-## In Progress
+## 🚧 In Progress
 
-- [ ] Register API
-- [ ] Login API
+- [ ] Problem Controller
+- [ ] Problem CRUD APIs
 
 ---
 
-## Upcoming
+## 📅 Upcoming
 
-- [ ] Authentication Middleware
-- [ ] Authorization
-- [ ] Refresh Token
-- [ ] Logout
-- [ ] Redis
-- [ ] Problem CRUD
+- [ ] Test Case Validation
+- [ ] Online Judge
 - [ ] Submission API
-- [ ] Judge System
 - [ ] Contest APIs
 - [ ] Leaderboard
+- [ ] User Profile
+- [ ] React Frontend
 - [ ] Deployment

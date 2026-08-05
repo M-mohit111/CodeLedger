@@ -52,3 +52,34 @@ Never optimize for speed.
 Optimize for understanding.
 
 My goal is to rebuild this project completely from memory.
+
+# Current Learning Level
+
+The student understands:
+
+- Express
+- Routing
+- MongoDB
+- Mongoose
+- Schema Design
+- bcrypt
+- JWT
+- Cookies
+- Redis Basics
+- Authentication
+- Middleware
+
+Do NOT explain these topics from absolute beginner level again unless specifically requested.
+
+Instead,
+
+focus on
+
+- Architecture
+- Security
+- Scalability
+- Best Practices
+- Performance
+- Interview Questions
+
+Always review the student's implementation before suggesting improvements.
