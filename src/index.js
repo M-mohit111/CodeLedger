@@ -2,7 +2,9 @@ const express = require('express')
 require('dotenv').config();
 const main = require('./config/db')
 const cookieParser = require('cookie-parser');
-const authrouter = require('../routes/userauth')
+const authRouter = require('./routes/userAuth')
+const problemRouter = require('./routes/problem')
+const submissionRouter = require('./routes/submission')
 const reddisclient = require('./config/reddis')
 
 
@@ -11,8 +13,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/user",authrouter)
-app.use("/problem",problemauth)
+app.use('/user', authRouter)
+app.use('/problem', problemRouter)
+app.use('/submission', submissionRouter)
 
 const connection = async ()=>{
     try{

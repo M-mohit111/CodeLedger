@@ -2,9 +2,9 @@
 
 const express = require('express')
 const authrouter = express.Router();
-const usermiddleware = require('../middleware/usermiddleware')
-const adminmiddleware = require('../middleware/adminmiddleware')
-const {register,login,logout,adminRegister} = require('../controller/userauthentication')
+const usermiddleware = require('../middleware/userMiddleware')
+const adminmiddleware = require('../middleware/adminMiddleware')
+const {register,login,logout,adminRegister} = require('../controllers/userAuth')
 
 // register
 authrouter.post("/register",register);

@@ -63,7 +63,19 @@ const problemSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:'user',
         required:true
-    }
+    },
+    referencesolution:[
+        {
+            language:{
+                type:String,
+                required:true,
+            },
+            completecode:{
+                type:String,
+                required:true
+            }
+        }
+    ]
 })
 const Problem = mongoose.model('problem',problemSchema);
 module.exports = Problem;

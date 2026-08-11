@@ -1,41 +1,30 @@
 const jwt = require('jsonwebtoken');
-const User = require('../src/models/user');
-const reddisclient = require("../src/config/reddis");
+const User = require('../models/user');
+const reddisclient = require("../config/reddis");
 
 const adminmiddleware = async (req,res,next)=>{
-
     try{
         const {token} = req.cookies;
-
         if(!token){
             throw new Error("invalid token")
         }
         const payload = jwt.verify(token,process.env.JWT_SECRET_KEY);
-
         const {_id} = payload;
-
         if(!_id){
             throw new Error("invalid token")
         }
-
         const result = await User.findById(_id);
-
         if(!payload.role){
             throw new Error("invalid token")
         }
-
         if(!result){
             throw new Error("user doesn't exists")
         }
-
         const present = await reddisclient.exists(`token:${token}`);
-
         if(present){
             throw new Error("blocked token")
         }
-
         req.result = result;
-
         next();
     }
     catch(err){
