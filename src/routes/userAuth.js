@@ -4,7 +4,7 @@ const express = require('express')
 const authrouter = express.Router();
 const usermiddleware = require('../middleware/userMiddleware')
 const adminmiddleware = require('../middleware/adminMiddleware')
-const {register,login,logout,adminRegister} = require('../controllers/userAuth')
+const {register,login,logout,adminRegister} = require('../controllers/userAuthentication')
 
 // register
 authrouter.post("/register",register);
