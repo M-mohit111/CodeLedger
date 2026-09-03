@@ -1,4 +1,5 @@
-const Problem = require('../models/problem')
+const Problem = require('../models/problem');
+const { findById } = require('../models/user');
 const {getLanguageById,submitBatch,submitToken} = require('../utils/problemUtility')
 
 // here the admin can create the problem and save it in db
@@ -48,8 +49,47 @@ const createproblem = async (req,res)=>{
 
 // Update problem by ID
 const updateproblem = async (req,res)=>{
+    const {id} = req.params;
+    const {title,description,difficulty,tags,
+        visibleTestCases,hiddenTestCases,startCode,
+        referenceSolution, problemCreator
+    } = req.body;
     try{
+        if(!id){
+            res.send("id is missing fill the field");
+        }
+        const serachid = Problem.findById(id);
+        if(!serachid){
+            res.send("no matching problem is their saved");
+        }
 
+        for(const {language,completeCode} of referenceSolution){
+
+            const languageId = getLanguageById(language);
+
+            const submissions = visibleTestCases.map((testcase)=>({
+                source_code:completeCode,
+                language_id: languageId,
+                stdin: testcase.input,
+                expected_output: testcase.output
+            }));
+
+            const submitResult = await submitBatch(submissions);
+
+            const resultToken = submitResult.map((value)=> value.token);
+
+            const testResult = await submitToken(resultToken);
+
+            for(const test of testResult){
+                if(test.status_id!=3){
+                return res.status(400).send("Error Occured");
+                }
+            }
+        }
+
+        const updatedquestion = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true,new:true});
+
+        res.status(201).send(updatedquestion);
     }
     catch(err){
         res.status(400).send("Error: "+err);
@@ -58,8 +98,16 @@ const updateproblem = async (req,res)=>{
 
 // Delete problem by ID
 const deleteproblem = async (req,res)=>{
+    const {id} = req.params;
     try{
-
+        if(!id){
+            res.send("id field is missing");
+        }
+        const deletethatproblem = await Problem.findByIdAndDelete(id);
+        if(!deletethatproblem){
+            res.send("their is not such problem")
+        }
+        res.send("problem delete sucessfully");
     }
     catch(err){
         res.status(400).send("Error: "+err);
@@ -68,8 +116,16 @@ const deleteproblem = async (req,res)=>{
 
 // Get problem by ID
 const getproblembyid = async (req,res)=>{
+    const {id} = req.params
     try{
-
+        if(!id){
+            res.send("id field is missing");
+        }
+        const gettheproblem = await Problem.findById(id);
+        if(!gettheproblem){
+            res.send("their is not such problem")
+        }
+        res.send(gettheproblem);
     }
     catch(err){
         res.status(400).send("Error: "+err);
@@ -78,8 +134,13 @@ const getproblembyid = async (req,res)=>{
 
 // Get all problems
 const getallproblem = async (req,res)=>{
-    try{
 
+    try{
+        const getalltheproblem = await Problem.find({});
+        if(getalltheproblem.length==0){
+            res.send("their is not such problem")
+        }
+        res.send(getalltheproblem);
     }
     catch(err){
         res.status(400).send("Error: "+err);
