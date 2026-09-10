@@ -36,14 +36,19 @@ app.use("/video",videoRouter);
 
 const InitalizeConnection = async ()=>{
     try{
-
         await Promise.all([main(),redisClient.connect()]);
         console.log("DB Connected");
         
+        try {
+            await mongoose.connection.collection('users_v2').dropIndex('problemSolved_1');
+            console.log("Duplicate problemSolved index deleted successfully!");
+        } catch (err) {
+            console.log("Index already deleted or not found.");
+        }
+
         app.listen(process.env.PORT, ()=>{
             console.log("Server listening at port number: "+ process.env.PORT);
         })
-
     }
     catch(err){
         console.log("Error: "+err);
