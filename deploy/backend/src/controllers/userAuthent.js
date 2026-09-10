@@ -33,9 +33,10 @@ const register = async (req,res)=>{
         message:"Loggin Successfully"
     })
     }
-    catch(err){
-        res.status(400).send("Error: "+err);
-    }
+catch(err){
+    console.log("🚨 SIGNUP MEIN YEH ERROR HAI: ", err.message || err);
+    res.status(400).send("Error: "+err);
+}
 }
 
 

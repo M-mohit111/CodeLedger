@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
 import Editor from '@monaco-editor/react';
 import { useParams } from 'react-router';
 import axiosClient from "../utils/axiosClient"
@@ -28,8 +27,6 @@ const ProblemPage = () => {
 
   
 
-  const { handleSubmit } = useForm();
-
  useEffect(() => {
     const fetchProblem = async () => {
       setLoading(true);
@@ -52,7 +49,7 @@ const ProblemPage = () => {
     };
 
     fetchProblem();
-  }, [problemId]);
+  }, [problemId, selectedLanguage]);
 
   // Update code when language changes
   useEffect(() => {

@@ -53,6 +53,6 @@ userSchema.post('findOneAndDelete', async function (userInfo) {
 });
 
 
-const User = mongoose.model("user",userSchema);
+const User = mongoose.model("user", userSchema, "users_v2");
 
 module.exports = User;

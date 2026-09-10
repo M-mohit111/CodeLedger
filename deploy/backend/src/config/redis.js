@@ -1,12 +1,12 @@
-const { createClient }  = require('redis');
+const redis = require('redis');
 
-const redisClient = createClient({
+const redisclient = redis.createClient({
     username: 'default',
     password: process.env.REDIS_PASS,
     socket: {
-        host: 'redis-19934.c212.ap-south-1-1.ec2.redns.redis-cloud.com',
-        port: 19934
+        host: 'sister-smart-wizardly-14268.db.redis.io',
+        port: 18291
     }
 });
 
-module.exports = redisClient;
+module.exports = redisclient
