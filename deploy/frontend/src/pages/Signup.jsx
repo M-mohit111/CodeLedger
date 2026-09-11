@@ -16,7 +16,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, loading } = useSelector((state) => state.auth); // Removed error as it wasn't used
+  const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
 
   const {
     register,
@@ -119,6 +119,12 @@ function Signup() {
               </button>
             </div>
           </form>
+
+          {error && (
+            <div role="alert" className="alert alert-error mt-4">
+              <span>{error}</span>
+            </div>
+          )}
 
           {/* Login Redirect */}
           <div className="text-center mt-6"> {/* Increased mt for spacing */}

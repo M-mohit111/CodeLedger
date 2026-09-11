@@ -6,7 +6,9 @@ if (!buffer.SlowBuffer) {
 
 const express = require('express')
 const app = express();
+const mongoose = require('mongoose');
 require('dotenv').config();
+const errorMiddleware = require('./middleware/errorMiddleware');
 const main =  require('./config/db')
 const cookieParser =  require('cookie-parser');
 const authRouter = require("./routes/userAuth");
@@ -17,10 +19,19 @@ const aiRouter = require("./routes/aiChatting")
 const videoRouter = require("./routes/videoCreator");
 const cors = require('cors')
 
-// console.log("Hello")
+const allowedOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:5173',
+    'http://127.0.0.1:5173'
+];
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Origin is not allowed by CORS'));
+    },
     credentials: true 
 }))
 
@@ -32,6 +43,7 @@ app.use('/problem',problemRouter);
 app.use('/submission',submitRouter);
 app.use('/ai',aiRouter);
 app.use("/video",videoRouter);
+app.use(errorMiddleware);
 
 
 const InitalizeConnection = async ()=>{

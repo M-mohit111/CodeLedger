@@ -113,7 +113,7 @@ const authSlice = createSlice({
       })
       .addCase(checkAuth.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Something went wrong';
+        state.error = action.payload?.message || (typeof action.payload === 'string' ? action.payload : null);
         state.isAuthenticated = false;
         state.user = null;
       })

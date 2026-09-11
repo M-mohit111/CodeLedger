@@ -4,7 +4,14 @@ const validate = require('../utils/validator');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const Submission = require("../models/submission")
+const asyncHandler = require('../utils/asyncHandler');
 
+const authCookieOptions = {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production'
+};
 
 const register = async (req,res)=>{
     
@@ -27,7 +34,7 @@ const register = async (req,res)=>{
         role:user.role,
     }
     
-     res.cookie('token',token,{ maxAge: 60*60*1000, httpOnly: true, sameSite: 'none', secure: true });
+    res.cookie('token',token,authCookieOptions);
      
      res.status(201).json({
         user:reply,
@@ -41,44 +48,42 @@ catch(err){
 }
 
 
-const login = async (req,res)=>{
+const login = asyncHandler(async (req, res) => {
+    const { emailId, password } = req.body;
 
-    try{
-        const {emailId, password} = req.body;
-
-        if(!emailId)
-            throw new Error("Invalid Credentials");
-        if(!password)
-            throw new Error("Invalid Credentials");
-
-        const user = await User.findOne({emailId});
-
-        const match = await bcrypt.compare(password,user.password);
-
-        if(!match)
-            throw new Error("Invalid Credentials");
-
-        const reply = {
-            firstName: user.firstName,
-            emailId: user.emailId,
-            _id: user._id,
-            role:user.role,
-        }
-
-        const token =  jwt.sign({_id:user._id , emailId:emailId, role:user.role},process.env.JWT_KEY,{expiresIn: 60*60});
-        
-        res.cookie('token',token,{ maxAge: 60*60*1000, httpOnly: true, sameSite: 'none', secure: true });
-        
-        res.status(201).json({
-            user:reply,
-            message:"Loggin Successfully"
-        })
+    if (!emailId || !password) {
+        return res.status(400).json({ success: false, message: "Email and password are required" });
     }
-    catch(err){
-        res.status(401).send("Error: "+err);
-    }
-}
 
+    const user = await User.findOne({ emailId });
+    
+    if (!user) {
+        return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    
+    if (!match) {
+        return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+
+    const reply = {
+        firstName: user.firstName,
+        emailId: user.emailId,
+        _id: user._id,
+        role: user.role,
+    };
+
+    const token = jwt.sign({ _id: user._id, emailId: emailId, role: user.role }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
+    
+    res.cookie('token', token, authCookieOptions);
+    
+    return res.status(200).json({
+        success: true,
+        user: reply,
+        message: "Logged in successfully"
+    });
+});
 
 // logOut feature
 
@@ -94,7 +99,7 @@ const logout = async(req,res)=>{
     //    Token add kar dung Redis ke blockList
     //    Cookies ko clear kar dena.....
 
-    res.cookie("token",null,{ expires: new Date(Date.now()), httpOnly: true, sameSite: 'none', secure: true });
+    res.cookie("token",null,{ ...authCookieOptions, expires: new Date(Date.now()) });
     
     res.send("Logged Out Succesfully");
 
@@ -150,4 +155,10 @@ const deleteProfile = async(req,res)=>{
 }
 
 
-module.exports = {register, login,logout,adminRegister,deleteProfile};
+module.exports = { 
+    register: asyncHandler(register), 
+    login, 
+    logout: asyncHandler(logout), 
+    adminRegister: asyncHandler(adminRegister), 
+    deleteProfile: asyncHandler(deleteProfile) 
+};
