@@ -1,20 +1,3 @@
-<div align="center">
-  <img src="https://img.icons8.com/nolan/96/code.png" alt="CodeLedger Logo"/>
-  <h1>CodeLedger</h1>
-  <p><strong>A Modern, Full-Stack Algorithmic Coding Platform built with the MERN Stack.</strong></p>
-
-  <p>
-    <a href="https://codeledger.vercel.app"><img src="https://img.shields.io/badge/Live_Demo-0b0d14?style=for-the-badge&logo=vercel" alt="Live Demo" /></a>
-    <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-    <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
-    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node" />
-    <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis" />
-  </p>
-</div>
-
----
-
 ## 🚀 About The Project
 
 **CodeLedger** is a modern, full-stack competitive programming and coding platform. It provides a seamless coding environment with integrated code execution, AI-powered doubt solving, and video editorials. Built to handle complex state, secure authentication, and seamless third-party API integrations, it provides developers with a sleek workspace to practice data structures and algorithms.
@@ -55,11 +38,11 @@
 
 ## 📸 Sneak Peek
 
-*(Add a screenshot of your beautiful Dark Theme Dashboard here)*
-`![Dashboard Preview](https://via.placeholder.com/800x400.png?text=Add+Dashboard+Screenshot+Here)`
+![login page](image.png)
 
-*(Add a screenshot of your Code Editor & AI Chatbot here)*
-`![Editor Preview](https://via.placeholder.com/800x400.png?text=Add+Code+Editor+Screenshot+Here)`
+![dashboard page](image-1.png)
+
+![problem](image-2.png)
 
 ---
 
