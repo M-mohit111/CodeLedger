@@ -44,6 +44,8 @@
 
 ![problem](image-2.png)
 
+![admin panel](image-3.png)
+
 ---
 
 ## ⚙️ Local Installation & Environment Variables
