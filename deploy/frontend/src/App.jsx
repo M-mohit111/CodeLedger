@@ -11,6 +11,7 @@ import Admin from "./pages/Admin";
 import AdminVideo from "./components/AdminVideo"
 import AdminDelete from "./components/AdminDelete"
 import AdminUpload from "./components/AdminUpload"
+import Layout from "./components/Layout";
 
 function App(){
   
@@ -29,7 +30,7 @@ function App(){
   }
 
   return(
-  <>
+  <Layout>
     <Routes>
       <Route path="/" element={isAuthenticated ?<Homepage></Homepage>:<Navigate to="/signup" />}></Route>
       <Route path="/login" element={isAuthenticated?<Navigate to="/" />:<Login></Login>}></Route>
@@ -42,7 +43,7 @@ function App(){
       <Route path="/problem/:problemId" element={<ProblemPage/>}></Route>
       
     </Routes>
-  </>
+  </Layout>
   )
 }
 

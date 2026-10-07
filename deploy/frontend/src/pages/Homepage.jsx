@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router'; // Fixed import
-import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router'; 
+import { useSelector } from 'react-redux';
 import axiosClient from '../utils/axiosClient';
-import { logoutUser } from '../authSlice';
+import { CheckCircle2, Circle } from 'lucide-react';
 
 function Homepage() {
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [problems, setProblems] = useState([]);
   const [solvedProblems, setSolvedProblems] = useState([]);
@@ -38,11 +37,6 @@ function Homepage() {
     if (user) fetchSolvedProblems();
   }, [user]);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setSolvedProblems([]); // Clear solved problems on logout
-  };
-
   const filteredProblems = problems.filter(problem => {
     const difficultyMatch = filters.difficulty === 'all' || problem.difficulty === filters.difficulty;
     const tagMatch = filters.tag === 'all' || problem.tags === filters.tag;
@@ -51,109 +45,104 @@ function Homepage() {
     return difficultyMatch && tagMatch && statusMatch;
   });
 
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty.toLowerCase()) {
+      case 'easy': return 'text-emerald-400';
+      case 'medium': return 'text-yellow-400';
+      case 'hard': return 'text-red-400';
+      default: return 'text-gray-400';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-base-200">
-      {/* Navigation Bar */}
-      <nav className="navbar bg-base-100 shadow-lg px-4">
-        <div className="flex-1">
-          <NavLink to="/" className="btn btn-ghost text-xl">CodeLedger</NavLink>
+    <div className="max-w-6xl mx-auto">
+      {/* Header Area */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Problem Set</h1>
+        <p className="text-gray-400">Master algorithms and data structures.</p>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        <select 
+          className="bg-[#151822] border border-white/5 rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          value={filters.status}
+          onChange={(e) => setFilters({...filters, status: e.target.value})}
+        >
+          <option value="all">Status</option>
+          <option value="solved">Solved</option>
+        </select>
+
+        <select 
+          className="bg-[#151822] border border-white/5 rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          value={filters.difficulty}
+          onChange={(e) => setFilters({...filters, difficulty: e.target.value})}
+        >
+          <option value="all">Difficulty</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        <select 
+          className="bg-[#151822] border border-white/5 rounded-lg px-4 py-2 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          value={filters.tag}
+          onChange={(e) => setFilters({...filters, tag: e.target.value})}
+        >
+          <option value="all">Tags</option>
+          <option value="array">Array</option>
+          <option value="linkedList">Linked List</option>
+          <option value="graph">Graph</option>
+          <option value="dp">Dynamic Programming</option>
+        </select>
+      </div>
+
+      {/* Problems Table */}
+      <div className="bg-[#151822] rounded-xl border border-white/5 overflow-hidden">
+        <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 text-sm font-medium text-gray-400 bg-white/5">
+          <div className="col-span-1 text-center">Status</div>
+          <div className="col-span-7">Title</div>
+          <div className="col-span-2">Tags</div>
+          <div className="col-span-2 text-right">Difficulty</div>
         </div>
-        <div className="flex-none gap-4">
-          <div className="dropdown dropdown-end">
-            <div tabIndex={0} className="btn btn-ghost">
-              {user?.firstName}
-            </div>
-            <ul className="mt-3 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-              <li><button onClick={handleLogout}>Logout</button></li>
-              {user.role=='admin'&&<li><NavLink to="/admin">Admin</NavLink></li>}
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="container mx-auto p-4">
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          {/* New Status Filter */}
-          <select 
-            className="select select-bordered"
-            value={filters.status}
-            onChange={(e) => setFilters({...filters, status: e.target.value})}
-          >
-            <option value="all">All Problems</option>
-            <option value="solved">Solved Problems</option>
-          </select>
-
-          <select 
-            className="select select-bordered"
-            value={filters.difficulty}
-            onChange={(e) => setFilters({...filters, difficulty: e.target.value})}
-          >
-            <option value="all">All Difficulties</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-
-          <select 
-            className="select select-bordered"
-            value={filters.tag}
-            onChange={(e) => setFilters({...filters, tag: e.target.value})}
-          >
-            <option value="all">All Tags</option>
-            <option value="array">Array</option>
-            <option value="linkedList">Linked List</option>
-            <option value="graph">Graph</option>
-            <option value="dp">DP</option>
-          </select>
-        </div>
-
-        {/* Problems List */}
-        <div className="grid gap-4">
-          {filteredProblems.map(problem => (
-            <div key={problem._id} className="card bg-base-100 shadow-xl">
-              <div className="card-body">
-                <div className="flex items-center justify-between">
-                  <h2 className="card-title">
-                    <NavLink to={`/problem/${problem._id}`} className="hover:text-primary">
-                      {problem.title}
-                    </NavLink>
-                  </h2>
-                  {solvedProblems.some(sp => sp._id === problem._id) && (
-                    <div className="badge badge-success gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      Solved
-                    </div>
+        
+        <div className="divide-y divide-white/5">
+          {filteredProblems.map(problem => {
+            const isSolved = solvedProblems.some(sp => sp._id === problem._id);
+            return (
+              <div key={problem._id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/5 transition-colors">
+                <div className="col-span-1 flex justify-center">
+                  {isSolved ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                  ) : (
+                    <Circle className="w-5 h-5 text-gray-600" />
                   )}
                 </div>
-                
-                <div className="flex gap-2">
-                  <div className={`badge ${getDifficultyBadgeColor(problem.difficulty)}`}>
-                    {problem.difficulty}
-                  </div>
-                  <div className="badge badge-info">
-                    {problem.tags}
-                  </div>
+                <div className="col-span-7 font-medium">
+                  <NavLink to={`/problem/${problem._id}`} className="text-gray-200 hover:text-blue-400 transition-colors">
+                    {problem.title}
+                  </NavLink>
+                </div>
+                <div className="col-span-2">
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full text-xs text-gray-400 capitalize">
+                    {problem.tags === 'linkedList' ? 'Linked List' : problem.tags}
+                  </span>
+                </div>
+                <div className={`col-span-2 text-right text-sm font-medium capitalize ${getDifficultyColor(problem.difficulty)}`}>
+                  {problem.difficulty}
                 </div>
               </div>
+            );
+          })}
+          {filteredProblems.length === 0 && (
+            <div className="px-6 py-8 text-center text-gray-500">
+              No problems found matching your filters.
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-const getDifficultyBadgeColor = (difficulty) => {
-  switch (difficulty.toLowerCase()) {
-    case 'easy': return 'badge-success';
-    case 'medium': return 'badge-warning';
-    case 'hard': return 'badge-error';
-    default: return 'badge-neutral';
-  }
-};
 
 export default Homepage;

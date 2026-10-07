@@ -11,7 +11,7 @@ const solveDoubt = async(req , res)=>{
        
         async function main() {
         const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-3.6-flash",
         contents: messages,
         config: {
         systemInstruction: `
@@ -20,8 +20,8 @@ You are an expert Data Structures and Algorithms (DSA) tutor specializing in hel
 ## CURRENT PROBLEM CONTEXT:
 [PROBLEM_TITLE]: ${title}
 [PROBLEM_DESCRIPTION]: ${description}
-[EXAMPLES]: ${testCases}
-[startCode]: ${startCode}
+[EXAMPLES]: ${JSON.stringify(testCases)}
+[startCode]: ${JSON.stringify(startCode)}
 
 
 ## YOUR CAPABILITIES:

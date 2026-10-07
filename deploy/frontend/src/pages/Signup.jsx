@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router';
 import { registerUser } from '../authSlice';
+import { Code2, Trophy, BrainCircuit, Users, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 const signupSchema = z.object({
   firstName: z.string().min(3, "Minimum character should be 3"),
@@ -18,11 +19,7 @@ function Signup() {
   const navigate = useNavigate();
   const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: zodResolver(signupSchema) });
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(signupSchema) });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -35,107 +32,162 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200"> {/* Added a light bg for contrast */}
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title justify-center text-3xl mb-6">CodeLedger</h2> {/* Added mb-6 for spacing */}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* First Name Field */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">First Name</span>
-              </label>
-              <input
-                type="text"
-                placeholder="John"
-                className={`input input-bordered w-full ${errors.firstName ? 'input-error' : ''}`} 
-                {...register('firstName')}
-              />
-              {errors.firstName && (
-                <span className="text-error text-sm mt-1">{errors.firstName.message}</span>
-              )}
-            </div>
+    <div className="min-h-screen bg-[#0b0d14] text-white flex items-center justify-center p-4 lg:p-8 font-sans relative overflow-hidden">
+      {/* Background glow effects */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
 
-            {/* Email Field */}
-            <div className="form-control mt-4">
-              <label className="label">
-                <span className="label-text">Email</span>
-              </label>
-              <input
-                type="email"
-                placeholder="john@example.com"
-                className={`input input-bordered w-full ${errors.emailId ? 'input-error' : ''}`} // Ensure w-full for consistency
-                {...register('emailId')}
-              />
-              {errors.emailId && (
-                <span className="text-error text-sm mt-1">{errors.emailId.message}</span>
-              )}
+      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center z-10">
+        
+        {/* Left Side: Features */}
+        <div className="space-y-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300 mb-4">
+              <span>Build</span> <span className="w-1 h-1 rounded-full bg-blue-500"></span> 
+              <span>Practice</span> <span className="w-1 h-1 rounded-full bg-purple-500"></span> 
+              <span>Grow</span>
             </div>
+            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-3">
+              Welcome to <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">CodeLedger</span>
+            </h1>
+            <p className="text-gray-400 text-base max-w-md">
+              The modern coding platform for developers. Solve problems, track progress, join contests and level up your skills.
+            </p>
+          </div>
 
-            {/* Password Field with Toggle */}
-            <div className="form-control mt-4">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
+          <div className="space-y-3">
+            <FeatureItem icon={<Code2 className="w-5 h-5 text-blue-400" />} title="Practice & Improve" desc="Curated problems for all skill levels" />
+            <FeatureItem icon={<Trophy className="w-5 h-5 text-yellow-400" />} title="Contests & Leaderboards" desc="Compete, rank and challenge yourself" />
+            <FeatureItem icon={<BrainCircuit className="w-5 h-5 text-purple-400" />} title="AI Doubt Solver" desc="Get instant help with Google GenAI" />
+            <FeatureItem icon={<Users className="w-5 h-5 text-green-400" />} title="Build Your Profile" desc="Showcase your progress and get noticed" />
+          </div>
+
+          <div className="pt-2">
+            <span className="text-lg font-script text-blue-300/80 italic" style={{fontFamily: 'cursive'}}>Better Code. Better You.</span>
+          </div>
+        </div>
+
+        {/* Right Side: Form Card */}
+        <div className="bg-[#151822] p-6 lg:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+          {/* Subtle card inner glow */}
+          <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <Code2 className="w-6 h-6 text-blue-500" />
+              <span className="text-xl font-bold text-white">Code<span className="text-blue-500">Ledger</span></span>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-1">Create your account</h2>
+            <p className="text-gray-400 text-sm">Join our community and start coding today.</p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">First Name</label>
               <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="John"
+                  className={`block w-full pl-10 pr-4 py-2 bg-[#0b0d14] border ${errors.firstName ? 'border-red-500' : 'border-white/10'} rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all`}
+                  {...register('firstName')}
+                />
+              </div>
+              {errors.firstName && <span className="text-red-400 text-xs mt-1 block">{errors.firstName.message}</span>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-500" />
+                </div>
+                <input
+                  type="email"
+                  placeholder="john@example.com"
+                  className={`block w-full pl-10 pr-4 py-2 bg-[#0b0d14] border ${errors.emailId ? 'border-red-500' : 'border-white/10'} rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all`}
+                  {...register('emailId')}
+                />
+              </div>
+              {errors.emailId && <span className="text-red-400 text-xs mt-1 block">{errors.emailId.message}</span>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-500" />
+                </div>
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  // Added pr-10 (padding-right) to make space for the button
-                  className={`input input-bordered w-full pr-10 ${errors.password ? 'input-error' : ''}`}
+                  className={`block w-full pl-10 pr-10 py-2 bg-[#0b0d14] border ${errors.password ? 'border-red-500' : 'border-white/10'} rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all`}
                   {...register('password')}
                 />
                 <button
                   type="button"
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700" // Added transform for better centering, styling
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-300"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"} // Accessibility
                 >
-                  {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && (
-                <span className="text-error text-sm mt-1">{errors.password.message}</span>
-              )}
+              {errors.password && <span className="text-red-400 text-xs mt-1 block">{errors.password.message}</span>}
             </div>
 
-            {/* Submit Button */}
-            <div className="form-control mt-8 flex justify-center"> 
-              <button
-                type="submit"
-                className={`btn btn-primary ${loading ? 'loading' : ''}`}
-                disabled={loading}
-              >
-                {loading ? 'Signing Up...' : 'Sign Up'}
-              </button>
-            </div>
+            {error && (
+              <div className="p-2 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-red-400 text-xs text-center">{error}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl text-sm font-medium shadow-lg shadow-blue-500/25 transition-all flex justify-center items-center gap-2 mt-4"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <User className="w-4 h-4" /> Sign Up
+                </>
+              )}
+            </button>
           </form>
 
-          {error && (
-            <div role="alert" className="alert alert-error mt-4">
-              <span>{error}</span>
-            </div>
-          )}
+          <div className="mt-6 relative flex items-center justify-center">
+            <div className="border-t border-white/10 w-full absolute"></div>
+            <span className="bg-[#151822] px-3 text-[10px] uppercase text-gray-500 relative z-10">OR</span>
+          </div>
 
-          {/* Login Redirect */}
-          <div className="text-center mt-6"> {/* Increased mt for spacing */}
-            <span className="text-sm">
+          <div className="mt-4 text-center">
+            <p className="text-gray-400 text-sm">
               Already have an account?{' '}
-              <NavLink to="/login" className="link link-primary">
+              <NavLink to="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
                 Login
               </NavLink>
-            </span>
+            </p>
           </div>
         </div>
+
+      </div>
+    </div>
+  );
+}
+
+function FeatureItem({ icon, title, desc }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 shadow-inner shadow-white/5">
+        {icon}
+      </div>
+      <div>
+        <h3 className="text-white font-medium text-sm">{title}</h3>
+        <p className="text-gray-400 text-xs">{desc}</p>
       </div>
     </div>
   );

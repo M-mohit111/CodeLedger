@@ -26,10 +26,10 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Allow requests with no origin only in development (like Postman), or if it matches allowed origins.
+        if (allowedOrigins.includes(origin) || (!origin && process.env.NODE_ENV !== 'production')) {
             return callback(null, true);
         }
-
         return callback(new Error('Origin is not allowed by CORS'));
     },
     credentials: true 
@@ -46,27 +46,19 @@ app.use("/video",videoRouter);
 app.use(errorMiddleware);
 
 
-const InitalizeConnection = async ()=>{
+const InitializeConnection = async ()=>{
     try{
-        await Promise.all([main(),redisClient.connect()]);
+        await Promise.all([main(), redisClient.connect()]);
         console.log("DB Connected");
         
-        try {
-            await mongoose.connection.collection('users_v2').dropIndex('problemSolved_1');
-            console.log("Duplicate problemSolved index deleted successfully!");
-        } catch (err) {
-            console.log("Index already deleted or not found.");
-        }
-
         app.listen(process.env.PORT, ()=>{
             console.log("Server listening at port number: "+ process.env.PORT);
         })
     }
     catch(err){
-        console.log("Error: "+err);
+        console.error("Failed to initialize connections:", err);
+        process.exit(1);
     }
 }
 
-
-InitalizeConnection();
-
+InitializeConnection();

@@ -43,6 +43,18 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
     }
   }, []);
 
+  if (!secureUrl) {
+    return (
+      <div className="w-full max-w-2xl mx-auto rounded-xl bg-[#0b0d14] border border-white/5 p-8 text-center shadow-lg">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 mb-4">
+          <Play className="w-6 h-6 text-gray-500" />
+        </div>
+        <h3 className="text-lg font-bold text-gray-300 mb-2">Editorial Video Not Available</h3>
+        <p className="text-sm text-gray-500">The author hasn't uploaded a video editorial for this problem yet.</p>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg"
