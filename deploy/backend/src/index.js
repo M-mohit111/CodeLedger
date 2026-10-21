@@ -20,14 +20,18 @@ const videoRouter = require("./routes/videoCreator");
 const cors = require('cors')
 
 const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    'http://127.0.0.1:5173'
+    (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/+$/, ''),
+    'http://127.0.0.1:5173',
+    'http://localhost:5173'
 ];
 
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin only in development (like Postman), or if it matches allowed origins.
-        if (allowedOrigins.includes(origin) || (!origin && process.env.NODE_ENV !== 'production')) {
+        // Allow requests with no origin only in development (like Postman), or if it matches allowed origins or vercel domains.
+        if (!origin && process.env.NODE_ENV !== 'production') {
+            return callback(null, true);
+        }
+        if (origin && (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app'))) {
             return callback(null, true);
         }
         return callback(new Error('Origin is not allowed by CORS'));
