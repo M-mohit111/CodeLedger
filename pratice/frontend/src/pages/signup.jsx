@@ -1,12 +1,21 @@
 // import { useState } from "react"
 import {useForm} from "react-hook-form"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const signupSchema = z.object({
+    firstName : z.string().min(3,"name should contain 3 character"),
+    emailid : z.string(),
+    password: z.string().min(8,"minimum 8 length")
+})
 
 function Signup() {
 
     const {
         register,
         handleSubmit,
-    } = useForm();
+        formState: { errors },
+    } = useForm({resolver:zodResolver(signupSchema)});
 
     const submittedData = (data) => {
         console.log(data);
@@ -16,8 +25,11 @@ function Signup() {
         <>
         <form onSubmit={handleSubmit(submittedData)}>
         <input {...register('firstName')} placeholder='Enter Name'/>
-        <input {...register('email')} placeholder="Enter Email"/>
+        {errors.firstName && (<span className="text-red-400 text-xs mt-1 block">{errors.firstName.message}</span>)}
+        <input {...register('emailid')} placeholder="Enter Email"/>
+        {errors.emailid && (<span className="text-red-400 text-xs mt-1 block">{errors.emailid.message}</span>)}
         <input {...register('password')} placeholder="Enter Password"/>
+        {errors.password && (<span className="text-red-400 text-xs mt-1 block">{errors.password.message}</span>)}
         <button type='submit' className='btn btn-lg'>Submit</button>
         </form>
         </>
